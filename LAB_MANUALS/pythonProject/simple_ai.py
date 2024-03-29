@@ -14,6 +14,7 @@ class_names = ["Không khẩu trang ", "Đeo khẩu trang ", "Không có ngườ
 
 # CAMERA can be 0 or 1 based on default camera of your computer
 camera = cv2.VideoCapture(0)
+camera.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
 
 def image_detector():
     # Grab the webcamera's image.
@@ -23,7 +24,7 @@ def image_detector():
     image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
 
     # Show the image in a window
-    # cv2.imshow("Webcam Image", image)
+    #cv2.imshow("Webcam Image", image)
 
     # Make the image a numpy array and reshape it to the models input shape.
     image = np.asarray(image, dtype=np.float32).reshape(1, 224, 224, 3)
