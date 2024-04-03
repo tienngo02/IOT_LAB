@@ -21,9 +21,9 @@ public class MQTTHelper {
     public final String[] arrayTopics = {"nvtien/feeds/sensor1", "nvtien/feeds/sensor2", "nvtien/feeds/sensor3",
                                          "nvtien/feeds/button1", "nvtien/feeds/button2"};
 
-    final String clientId = "12345678";
+    final String clientId = "123456789";
     final String username = "nvtien";
-    final String password = "aio_MHig591hJmFAot84Wf0NKiAbFVP6";
+    final String password = "aio_JdIb50xwYzITyQrzO1XvLiJDilg8";
 
     final String serverUri = "tcp://io.adafruit.com:1883";
 
@@ -69,7 +69,7 @@ public class MQTTHelper {
             mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-
+                    Log.d("TEST", "onSuccess!");
                     DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
                     disconnectedBufferOptions.setBufferEnabled(true);
                     disconnectedBufferOptions.setBufferSize(100);
@@ -112,5 +112,7 @@ public class MQTTHelper {
             }
         }
     }
+
+
 
 }

@@ -21,13 +21,23 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="9"
+            android:layout_weight="8"
             android:text="IOT DEMO"
             android:textSize="30dp"
             android:textStyle="bold"
             android:textColor="#1E90FF"
             android:gravity="center">
         </TextView>
+
+        <ImageButton
+            android:id="@+id/btnSettings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/setting_icon"
+            android:layout_gravity="center"
+            android:background="#ffffff"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -164,7 +174,8 @@
             app:textOn="BẬT"
             app:textOff="TẮT"
             app:on="false"
-            app:colorBorder="@color/colorAccent"/>
+            app:colorBorder="@color/colorAccent"
+            app:colorDisabled="#bebebe"/>
     </LinearLayout>
 
     <LinearLayout
@@ -205,7 +216,8 @@
             app:textOn="BẬT"
             app:textOff="TẮT"
             app:on="false"
-            app:colorBorder="@color/colorAccent"/>
+            app:colorBorder="@color/colorAccent"
+            app:colorDisabled="#bebebe"/>
     </LinearLayout>
 
 
