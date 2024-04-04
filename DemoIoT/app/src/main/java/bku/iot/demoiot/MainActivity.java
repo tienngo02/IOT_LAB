@@ -2,8 +2,10 @@ package bku.iot.demoiot;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -54,6 +56,20 @@ public class MainActivity extends AppCompatActivity {
         btnPUMP = findViewById(R.id.btnPUMP);
         btnSettings = findViewById(R.id.btnSettings);
 
+//        Intent getNewKey = getIntent();
+//        String newKey = getNewKey.getStringExtra("newKey");
+//        if (newKey != null || newKey != ""){
+////            mqttHelper.setPassword(newKey);
+//            Log.d("TEST", "setPassword!");
+//        }
+
+//            mqttHelper.setPassword(newKey);
+//        Bundle getNewKeyBundle = getNewKey.getBundleExtra("newKeyPackage");
+//        getNewKeyBundle.getString("newKey");
+//        String newKey = getNewKeyBundle.getString("newKey");
+//        if(newKey == ""){}
+//        else mqttHelper.setPassword(newKey);
+
         btnLED.setOnToggledListener(new OnToggledListener() {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
@@ -77,6 +93,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+//        btnSettings.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
+//                startActivity(myIntent);
+//            }
+//        });
 
         startMQTT();
 

@@ -221,38 +221,6 @@
     </LinearLayout>
 
 
-    <!--    <com.github.angads25.toggle.widget.LabeledSwitch-->
-<!--        android:id="@+id/btnLED"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_marginLeft="30dp"-->
-
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_marginRight="30dp"-->
-<!--        android:layout_marginBottom="10dp"-->
-<!--        android:layout_weight="20"-->
-<!--        android:textSize="30dp"-->
-<!--        app:colorBorder="@color/colorAccent"-->
-<!--        app:on="false"-->
-<!--        app:textOff="TẮT"-->
-<!--        app:textOn="BẬT" />-->
-
-<!--    <com.github.angads25.toggle.widget.LabeledSwitch-->
-<!--        android:id="@+id/btnPUMP"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="20"-->
-
-<!--        android:layout_marginLeft="30dp"-->
-<!--        android:layout_marginRight="30dp"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_marginBottom="10dp"-->
-<!--        android:textSize="30dp"-->
-<!--        app:textOn="BẬT"-->
-<!--        app:textOff="TẮT"-->
-<!--        app:on="false"-->
-<!--        app:colorBorder="@color/colorAccent"/>-->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
