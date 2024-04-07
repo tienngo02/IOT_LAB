@@ -3,7 +3,9 @@ package bku.iot.demoiot;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     LabeledSwitch btnLED, btnPUMP;
     ImageButton btnSettings;
 
+    private String password = "aio_dAjN47GWlQwyiMtudpF1uVaiTS";
+
     String[] array_feed_url = {"https://io.adafruit.com/api/v2/nvtien/feeds/sensor1/data",
                                "https://io.adafruit.com/api/v2/nvtien/feeds/sensor2/data",
                                "https://io.adafruit.com/api/v2/nvtien/feeds/sensor3/data",
@@ -56,19 +60,10 @@ public class MainActivity extends AppCompatActivity {
         btnPUMP = findViewById(R.id.btnPUMP);
         btnSettings = findViewById(R.id.btnSettings);
 
-//        Intent getNewKey = getIntent();
-//        String newKey = getNewKey.getStringExtra("newKey");
-//        if (newKey != null || newKey != ""){
-////            mqttHelper.setPassword(newKey);
-//            Log.d("TEST", "setPassword!");
-//        }
-
-//            mqttHelper.setPassword(newKey);
-//        Bundle getNewKeyBundle = getNewKey.getBundleExtra("newKeyPackage");
-//        getNewKeyBundle.getString("newKey");
-//        String newKey = getNewKeyBundle.getString("newKey");
-//        if(newKey == ""){}
-//        else mqttHelper.setPassword(newKey);
+        SharedPreferences keyPreferences = getSharedPreferences("adafruitKey", MODE_PRIVATE);
+        String aioKey = keyPreferences.getString("aio_key","");
+        password = aioKey;
+        password = "aio_dAjN47GWlQwyiMtudpF1uVaiTS";
 
         btnLED.setOnToggledListener(new OnToggledListener() {
             @Override
@@ -94,15 +89,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        btnSettings.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
-//                startActivity(myIntent);
-//            }
-//        });
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                settingsIntent.putExtra("isConnect",mqttHelper.isConnect());
+                startActivity(settingsIntent);
+            }
+        });
+
+        Intent getNewKey = getIntent();
+        String newKey = getNewKey.getStringExtra("newKey");
+        if(!TextUtils.isEmpty(newKey)) {
+            Log.d("TEST", "setPassword!");
+            password = newKey;
+        }
 
         startMQTT();
+
+        btnLED.setEnabled(mqttHelper.isConnect());
+        btnPUMP.setEnabled(mqttHelper.isConnect());
 
     }
 
@@ -123,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startMQTT(){
-        mqttHelper = new MQTTHelper(this);
+        mqttHelper = new MQTTHelper(this, this.password);
         mqttHelper.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {

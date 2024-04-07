@@ -1,6 +1,9 @@
 package bku.iot.demoiot;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
@@ -23,11 +26,18 @@ public class MQTTHelper {
 
     final String clientId = "123456789";
     final String username = "nvtien";
-    final String password = "aio_GKdm46d5YOyTuZZqXq1z6L2M2Wq6";
+    private String password = "aio_dAjN47GWlQwyiMtudpF1uVaiTS";
 
     final String serverUri = "tcp://io.adafruit.com:1883";
 
-    public MQTTHelper(Context context){
+    public MQTTHelper(Context context, String key){
+
+        password = key;
+        SharedPreferences keyPreferences = context.getSharedPreferences("adafruitKey", MODE_PRIVATE);
+        SharedPreferences.Editor keyEditor = keyPreferences.edit();
+        keyEditor.putString("aio_key", password);
+        keyEditor.commit();
+
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -58,6 +68,7 @@ public class MQTTHelper {
     }
 
     private void connect(){
+
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
@@ -69,7 +80,6 @@ public class MQTTHelper {
             mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-
                     DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
                     disconnectedBufferOptions.setBufferEnabled(true);
                     disconnectedBufferOptions.setBufferSize(100);
@@ -113,4 +123,16 @@ public class MQTTHelper {
         }
     }
 
+    public void setPassword(String password){
+        this.password = password;
+    }
+    public String getPassword(){
+        return this.password ;
+    }
+
+    public void reconnect() { connect(); }
+
+    public boolean isConnect() {
+        return mqttAndroidClient.isConnected();
+    }
 }
