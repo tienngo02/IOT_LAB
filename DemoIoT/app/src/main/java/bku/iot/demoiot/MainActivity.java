@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences keyPreferences = getSharedPreferences("adafruitKey", MODE_PRIVATE);
         String aioKey = keyPreferences.getString("aio_key","");
         password = aioKey;
-        password = "aio_dAjN47GWlQwyiMtudpF1uVaiTS";
 
         btnLED.setOnToggledListener(new OnToggledListener() {
             @Override
