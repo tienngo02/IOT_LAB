@@ -7,7 +7,7 @@ from uart import *
 
 AIO_FEED_IDs = ["button1", "button2"]
 AIO_USERNAME = "nvtien"
-AIO_KEY = "aio_PFQc37LaGYWA79YLuVquqkTEuSjI"
+AIO_KEY = "aio_zDuk12TSAvYnQVTHMjUd96kKPegN"
 
 def connected(client):
     print("Ket noi thanh cong ...")

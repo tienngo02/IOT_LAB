@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -26,8 +28,7 @@ import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    ImageButton btnBack;
-    ImageButton btnGetKey;
+    ImageButton btnBack, btnGetKey, btnErrorSettings;
     EditText edtKey;
     String newKey;
 
@@ -39,6 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         btnGetKey = findViewById(R.id.btnGetKey);
         edtKey = findViewById(R.id.edtKey);
+        btnErrorSettings = findViewById(R.id.btnErrorSettings);
 
         btnGetKey.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,8 +54,21 @@ public class SettingsActivity extends AppCompatActivity {
                     newKeyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(newKeyIntent);
                 }
+                else if(isConnect){
+                    showErrorMessage("Key trước đó đã đúng ");
+                }
+                else if(TextUtils.isEmpty(newKey)){
+                    showErrorMessage("Ô bị trống ");
+                }
             }
 
+        });
+
+        btnErrorSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideErrorMessage();
+            }
         });
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +79,18 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    private void showErrorMessage(String message) {
+        LinearLayout errorContainer = findViewById(R.id.errorContainerSettings);
+        TextView textErrorMessage = findViewById(R.id.textErrorMessageSettings);
+
+        textErrorMessage.setText(message);
+        errorContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void hideErrorMessage() {
+        LinearLayout errorContainer = findViewById(R.id.errorContainerSettings);
+        errorContainer.setVisibility(View.GONE);
+    }
 
 
 }

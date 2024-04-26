@@ -33,10 +33,10 @@ public class MQTTHelper {
     public MQTTHelper(Context context, String key){
 
         password = key;
-        SharedPreferences keyPreferences = context.getSharedPreferences("adafruitKey", MODE_PRIVATE);
-        SharedPreferences.Editor keyEditor = keyPreferences.edit();
-        keyEditor.putString("aio_key", password);
-        keyEditor.commit();
+//        SharedPreferences keyPreferences = context.getSharedPreferences("adafruitKey", MODE_PRIVATE);
+//        SharedPreferences.Editor keyEditor = keyPreferences.edit();
+//        keyEditor.putString("aio_key", password);
+//        keyEditor.commit();
 
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {

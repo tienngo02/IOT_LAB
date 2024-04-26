@@ -1,5 +1,7 @@
 import serial.tools.list_ports
 
+definePort = "COM7"
+
 def getPort():
     ports = serial.tools.list_ports.comports()
     N = len(ports)
@@ -10,12 +12,13 @@ def getPort():
         if "USB Serial Device" in strPort:
             splitPort = strPort.split(" ")
             commPort = (splitPort[0])
-    return "COM7"
+    return definePort
 
 
-if getPort()!= "None":
-    ser = serial.Serial( port=getPort(), baudrate=115200)
+if getPort() != "None":
+    ser = serial.Serial(port=getPort(), baudrate=115200)
     print(ser)
+
 
 def processData(client, data):
     data = data.replace("!", "")
@@ -31,6 +34,8 @@ def processData(client, data):
 
 
 mess = ""
+
+
 def readSerial(client):
     bytesToRead = ser.inWaiting()
     if (bytesToRead > 0):
@@ -43,7 +48,7 @@ def readSerial(client):
             if (end == len(mess)):
                 mess = ""
             else:
-                mess = mess[end+1:]
+                mess = mess[end + 1:]
 
 
 def writeData(data):

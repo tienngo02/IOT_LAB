@@ -4,39 +4,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/errorContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:background="@android:color/holo_red_dark"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textErrorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đã xảy ra lỗi!"
+            android:textColor="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/btnError"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@android:color/holo_red_dark"
+            android:src="@drawable/ic_baseline_highlight_off_24" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
         android:orientation="horizontal">
+
         <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/logo">
-        </ImageView>
+            android:src="@drawable/logo"></ImageView>
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="8"
+            android:gravity="center"
             android:text="IOT DEMO"
-            android:textSize="30dp"
-            android:textStyle="bold"
             android:textColor="#1E90FF"
-            android:gravity="center">
-        </TextView>
+            android:textSize="30dp"
+            android:textStyle="bold"></TextView>
 
         <ImageButton
             android:id="@+id/btnSettings"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/setting_icon"
             android:layout_gravity="center"
-            android:background="#ffffff"/>
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:src="@drawable/setting_icon" />
 
     </LinearLayout>
 
@@ -49,41 +76,38 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="#ff0000"
-            android:text="Nhiệt độ"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
             android:gravity="center"
-            android:layout_margin="5dp">
-        </TextView>
+            android:text="Nhiệt độ"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold"></TextView>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="#00ff00"
-            android:text="Áng sáng"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
             android:gravity="center"
-            android:layout_margin="5dp">
-        </TextView>
+            android:text="Áng sáng"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold"></TextView>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="#0000ff"
-            android:text="Độ ẩm"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
             android:gravity="center"
-            android:layout_margin="5dp">
-        </TextView>
+            android:text="Độ ẩm"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold"></TextView>
 
     </LinearLayout>
 
@@ -97,43 +121,40 @@
             android:id="@+id/txtTemperature"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="#ff0000"
-            android:text="28.6*C"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
             android:gravity="center"
-            android:layout_margin="5dp">
-        </TextView>
+            android:text="28.6*C"
+            android:textColor="#ffffff"
+            android:textSize="30dp"
+            android:textStyle="bold"></TextView>
 
         <TextView
             android:id="@+id/txtLight"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="#00ff00"
-            android:text="70.8lux"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
             android:gravity="center"
-            android:layout_margin="5dp">
-        </TextView>
+            android:text="70.8lux"
+            android:textColor="#ffffff"
+            android:textSize="30dp"
+            android:textStyle="bold"></TextView>
 
         <TextView
             android:id="@+id/txtHumidity"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="#0000ff"
-            android:text="50.5%"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:textColor="#ffffff"
             android:gravity="center"
-            android:layout_margin="5dp">
-        </TextView>
+            android:text="50.5%"
+            android:textColor="#ffffff"
+            android:textSize="30dp"
+            android:textStyle="bold"></TextView>
 
     </LinearLayout>
 
@@ -153,29 +174,29 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="BÓNG ĐÈN"
-                android:textSize="20dp"
-                android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="#000000"/>
+                android:text="BÓNG ĐÈN"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <com.github.angads25.toggle.widget.LabeledSwitch
             android:id="@+id/btnLED"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_marginLeft="30dp"
 
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="2"
             android:textSize="20dp"
-            app:textOn="BẬT"
-            app:textOff="TẮT"
-            app:on="false"
             app:colorBorder="@color/colorAccent"
-            app:colorDisabled="#bebebe"/>
+            app:colorDisabled="#bebebe"
+            app:on="false"
+            app:textOff="TẮT"
+            app:textOn="BẬT" />
     </LinearLayout>
 
     <LinearLayout
@@ -194,30 +215,30 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="MÁY BƠM"
-                android:textSize="20dp"
-                android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="#000000"/>
+                android:text="MÁY BƠM"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <com.github.angads25.toggle.widget.LabeledSwitch
             android:id="@+id/btnPUMP"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_marginLeft="30dp"
 
 
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="2"
             android:textSize="20dp"
-            app:textOn="BẬT"
-            app:textOff="TẮT"
-            app:on="false"
             app:colorBorder="@color/colorAccent"
-            app:colorDisabled="#bebebe"/>
+            app:colorDisabled="#bebebe"
+            app:on="false"
+            app:textOff="TẮT"
+            app:textOn="BẬT" />
     </LinearLayout>
 
 

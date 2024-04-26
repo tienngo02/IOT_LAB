@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.angads25.toggle.interfaces.OnToggledListener;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     MQTTHelper mqttHelper;
     TextView txtTemp, txtLig, txtHumi;
     LabeledSwitch btnLED, btnPUMP;
-    ImageButton btnSettings;
+    ImageButton btnSettings, btnError;
 
     private String password = "aio_dAjN47GWlQwyiMtudpF1uVaiTS";
 
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         btnLED = findViewById(R.id.btnLED);
         btnPUMP = findViewById(R.id.btnPUMP);
         btnSettings = findViewById(R.id.btnSettings);
+        btnError = findViewById(R.id.btnError);
 
         SharedPreferences keyPreferences = getSharedPreferences("adafruitKey", MODE_PRIVATE);
         String aioKey = keyPreferences.getString("aio_key","");
@@ -97,6 +99,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideErrorMessage();
+            }
+        });
+
         Intent getNewKey = getIntent();
         String newKey = getNewKey.getStringExtra("newKey");
         if(!TextUtils.isEmpty(newKey)) {
@@ -106,8 +115,11 @@ public class MainActivity extends AppCompatActivity {
 
         startMQTT();
 
-        btnLED.setEnabled(mqttHelper.isConnect());
-        btnPUMP.setEnabled(mqttHelper.isConnect());
+//        if(!mqttHelper.isConnect()){
+//            btnLED.setEnabled(false);
+//            btnPUMP.setEnabled(false);
+//            showErrorMessage("Mất kết nối MQTT ");
+//        }
 
     }
 
@@ -132,8 +144,14 @@ public class MainActivity extends AppCompatActivity {
         mqttHelper.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
+                SharedPreferences keyPreferences = getSharedPreferences("adafruitKey", MODE_PRIVATE);
+                SharedPreferences.Editor keyEditor = keyPreferences.edit();
+                keyEditor.putString("aio_key", password);
+                keyEditor.commit();
+
                 btnLED.setEnabled(true);
                 btnPUMP.setEnabled(true);
+                hideErrorMessage();
                 Log.d("TEST", "connectComplete!");
             }
 
@@ -141,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
             public void connectionLost(Throwable cause) {
                 btnLED.setEnabled(false);
                 btnPUMP.setEnabled(false);
+                showErrorMessage("Mất kết nối MQTT ");
                 Log.d("TEST", "connectionLost!");
             }
 
@@ -172,6 +191,9 @@ public class MainActivity extends AppCompatActivity {
                         btnPUMP.setOn(false);
                     }
                 }
+                else{
+                    Log.d("TEST", "Error" + message.toString());
+                }
             }
 
             @Override
@@ -179,7 +201,20 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
+    private void showErrorMessage(String message) {
+        LinearLayout errorContainer = findViewById(R.id.errorContainer);
+        TextView textErrorMessage = findViewById(R.id.textErrorMessage);
+
+        textErrorMessage.setText(message);
+        errorContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void hideErrorMessage() {
+        LinearLayout errorContainer = findViewById(R.id.errorContainer);
+        errorContainer.setVisibility(View.GONE);
+    }
 
 }
