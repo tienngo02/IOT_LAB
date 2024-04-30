@@ -19,7 +19,7 @@ if getPort() != "None":
     ser = serial.Serial(port=getPort(), baudrate=115200)
     print(ser)
 
-
+isError = "0"
 def processData(client, data):
     data = data.replace("!", "")
     data = data.replace("#", "")
@@ -31,10 +31,10 @@ def processData(client, data):
         client.publish("sensor2", splitData[2])
     elif splitData[1] == "H":
         client.publish("sensor3", splitData[2])
-
+    elif splitData[1] == "C":
+        isError = splitData[2]
 
 mess = ""
-
 
 def readSerial(client):
     bytesToRead = ser.inWaiting()
@@ -53,3 +53,6 @@ def readSerial(client):
 
 def writeData(data):
     ser.write(str(data).encode())
+
+def getCheck():
+    return isError

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,12 +24,14 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.nio.charset.Charset;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,17 +40,16 @@ public class MainActivity extends AppCompatActivity {
     TextView txtTemp, txtLig, txtHumi;
     LabeledSwitch btnLED, btnPUMP;
     ImageButton btnSettings, btnError;
+    String check = "0";
 
     private String password = "aio_dAjN47GWlQwyiMtudpF1uVaiTS";
 
-    String[] array_feed_url = {"https://io.adafruit.com/api/v2/nvtien/feeds/sensor1/data",
-                               "https://io.adafruit.com/api/v2/nvtien/feeds/sensor2/data",
-                               "https://io.adafruit.com/api/v2/nvtien/feeds/sensor3/data",
-                               "https://io.adafruit.com/api/v2/nvtien/feeds/button1/data",
-                               "https://io.adafruit.com/api/v2/nvtien/feeds/button2/data",};
+    String[] API_FEED_URLS = { "https://io.adafruit.com/api/v2/nvtien/feeds/sensor1",
+                               "https://io.adafruit.com/api/v2/nvtien/feeds/sensor2",
+                               "https://io.adafruit.com/api/v2/nvtien/feeds/sensor3",
+                               "https://io.adafruit.com/api/v2/nvtien/feeds/button1",
+                               "https://io.adafruit.com/api/v2/nvtien/feeds/button2"};
 
-    String[] array_output_file = {"sensor1_data.json", "sensor2_data.json", "sensor3_data.json",
-                                  "button1_data.json", "button2_data.json"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +68,18 @@ public class MainActivity extends AppCompatActivity {
         String aioKey = keyPreferences.getString("aio_key","");
         password = aioKey;
 
+        setDataFromAPIs();
+
         btnLED.setOnToggledListener(new OnToggledListener() {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
                 if(isOn == true){
                     sendDataMQTT("nvtien/feeds/button1","1");
+                    checkSendData("2", btnLED);
                 }
                 else{
                     sendDataMQTT("nvtien/feeds/button1","0");
+                    checkSendData("1", btnLED);
                 }
             }
         });
@@ -83,9 +89,11 @@ public class MainActivity extends AppCompatActivity {
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
                 if(isOn == true){
                     sendDataMQTT("nvtien/feeds/button2","1");
+                    checkSendData("4", btnPUMP);
                 }
                 else{
                     sendDataMQTT("nvtien/feeds/button2","0");
+                    checkSendData("3", btnPUMP);
                 }
             }
         });
@@ -112,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d("TEST", "setPassword!");
             password = newKey;
         }
-
         startMQTT();
 
 //        if(!mqttHelper.isConnect()){
@@ -191,8 +198,9 @@ public class MainActivity extends AppCompatActivity {
                         btnPUMP.setOn(false);
                     }
                 }
-                else{
-                    Log.d("TEST", "Error" + message.toString());
+                else if(topic.contains("check")){
+                    check = message.toString();
+                    notifyDataUpdated();
                 }
             }
 
@@ -215,6 +223,152 @@ public class MainActivity extends AppCompatActivity {
     private void hideErrorMessage() {
         LinearLayout errorContainer = findViewById(R.id.errorContainer);
         errorContainer.setVisibility(View.GONE);
+    }
+
+//    public void checkSendData(String dataCheck) {
+//        int count = 0;
+//        while(count < 50 && !check.equals(dataCheck)){
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            count++;
+//        }
+//        Log.d("TEST", dataCheck + "***");
+//        Log.d("TEST", check + "***");
+//        if (!check.equals(dataCheck)) showErrorMessage("Gửi Thất bại ");
+//        else hideErrorMessage();
+//    }
+
+    private final Object lock = new Object();
+
+    public void checkSendData(String dataCheck, LabeledSwitch btnDevice) {
+        final long TIMEOUT = 5000; // Thời gian chờ tối đa là 5 giây
+        final long startTime = System.currentTimeMillis();
+
+        showErrorMessage("Đang gửi dữ liệu ");
+//        btnDevice.setEnabled(false);
+        new Thread(() -> {
+            synchronized (lock) {
+                while (!check.equals(dataCheck) && System.currentTimeMillis() - startTime < TIMEOUT) {
+                    try {
+                        lock.wait(TIMEOUT - (System.currentTimeMillis() - startTime)); // Chờ đến khi có dữ liệu hoặc hết thời gian
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (!check.equals(dataCheck)) {
+                    runOnUiThread(() -> showErrorMessage("Gửi thất bại "));
+//                    btnDevice.setEnabled(true);
+                    if (dataCheck.equals("2")){
+                        btnDevice.setOn(false);
+                        sendDataMQTT("nvtien/feeds/button1","0");
+                    }
+                    else if (dataCheck.equals("4")){
+                        btnDevice.setOn(false);
+                        sendDataMQTT("nvtien/feeds/button2","0");
+                    }
+                    else if (dataCheck.equals("1")){
+                        btnDevice.setOn(true);
+                        sendDataMQTT("nvtien/feeds/button1","1");
+                    }
+                    else {
+                        btnDevice.setOn(true);
+                        sendDataMQTT("nvtien/feeds/button2","1");
+                    }
+
+                } else {
+//                    btnDevice.setEnabled(true);
+                    runOnUiThread(this::hideErrorMessage);
+                }
+
+            }
+        }).start();
+
+
+    }
+
+    // Hàm này được gọi khi dữ liệu check được cập nhật
+    public void notifyDataUpdated() {
+        synchronized (lock) {
+            lock.notify(); // Kích thích luồng đang chờ
+        }
+    }
+
+    private void setDataFromAPIs() {
+            new FetchDataAsyncTask(this).execute(API_FEED_URLS);
+    }
+
+    private static class FetchDataAsyncTask extends AsyncTask<String[], Void, String[]> {
+
+        private MainActivity activity;
+
+        public FetchDataAsyncTask(MainActivity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        protected String[] doInBackground(String[]... params) {
+            String[] apiUrlArray = params[0];
+            String[] arrayResult = new String[5];
+            int i = 0;
+            for (String apiUrl : apiUrlArray) {
+                StringBuilder result = new StringBuilder();
+                try {
+                    URL url = new URL(apiUrl);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+                    reader.close();
+                    connection.disconnect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    arrayResult[i] = null;
+                }
+                arrayResult[i] = result.toString();
+                i++;
+            }
+            return arrayResult;
+        }
+
+        @Override
+        protected void onPostExecute(String[] arrayResult) {
+            for (String result : arrayResult) {
+                try {
+                    JSONObject json = new JSONObject(result);
+                    String nameFeed = json.getString("name");
+                    String lastValue = json.getString("last_value");
+                    Log.d("TEST", lastValue+" "+nameFeed);
+
+                    if (nameFeed.equals("sensor1")) {
+                        activity.txtTemp.setText(lastValue + "°C");
+                    } else if (nameFeed.equals("sensor2")) {
+                        activity.txtLig.setText(lastValue + "lux");
+                    } else if (nameFeed.equals("sensor3")) {
+                        activity.txtHumi.setText(lastValue + "%");
+                    } else if (nameFeed.equals("button1")) {
+                        if (lastValue.equals("1")) {
+                            activity.btnLED.setOn(true);
+                        } else {
+                            activity.btnLED.setOn(false);
+                        }
+                    } else if (nameFeed.equals("button2")) {
+                        if (lastValue.equals("1")) {
+                            activity.btnPUMP.setOn(true);
+                        } else {
+                            activity.btnPUMP.setOn(false);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }

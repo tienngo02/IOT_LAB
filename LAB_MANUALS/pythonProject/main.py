@@ -7,7 +7,7 @@ from uart import *
 
 AIO_FEED_IDs = ["button1", "button2"]
 AIO_USERNAME = "nvtien"
-AIO_KEY = "aio_zDuk12TSAvYnQVTHMjUd96kKPegN"
+AIO_KEY = "aio_xsrI26awmq9rgNVKaODOvPvVff4h"
 
 def connected(client):
     print("Ket noi thanh cong ...")
@@ -21,18 +21,31 @@ def disconnected(client):
     print("Ngat ket noi ...")
     sys.exit (1)
 
+def sendCheck(data):
+    # time.sleep(2)
+    # readSerial(client)
+    client.publish("check", data)
+    # if getCheck() == "1":
+    #     client.publish("check", 0)
+    # else:
+    #     client.publish("check", data)
+
 def message(client , feed_id , payload):
     print("Nhan du lieu: " + payload + ", feed id:" + feed_id)
     if feed_id == "button1":
         if payload == "0":
             writeData("1")
+            sendCheck("1")
         else:
             writeData("2")
+            sendCheck("2")
     if feed_id == "button2":
         if payload == "0":
             writeData("3")
+            sendCheck("3")
         else:
             writeData("4")
+            sendCheck("4")
 
 
 client = MQTTClient(AIO_USERNAME , AIO_KEY)

@@ -125,7 +125,7 @@
             android:layout_weight="1"
             android:background="#ff0000"
             android:gravity="center"
-            android:text="28.6*C"
+            android:text="--°C"
             android:textColor="#ffffff"
             android:textSize="30dp"
             android:textStyle="bold"></TextView>
@@ -138,7 +138,7 @@
             android:layout_weight="1"
             android:background="#00ff00"
             android:gravity="center"
-            android:text="70.8lux"
+            android:text="--lux"
             android:textColor="#ffffff"
             android:textSize="30dp"
             android:textStyle="bold"></TextView>
@@ -151,7 +151,7 @@
             android:layout_weight="1"
             android:background="#0000ff"
             android:gravity="center"
-            android:text="50.5%"
+            android:text="--%"
             android:textColor="#ffffff"
             android:textSize="30dp"
             android:textStyle="bold"></TextView>

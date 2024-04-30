@@ -22,7 +22,7 @@ public class MQTTHelper {
     public MqttAndroidClient mqttAndroidClient;
 
     public final String[] arrayTopics = {"nvtien/feeds/sensor1", "nvtien/feeds/sensor2", "nvtien/feeds/sensor3",
-                                         "nvtien/feeds/button1", "nvtien/feeds/button2"};
+                                         "nvtien/feeds/button1", "nvtien/feeds/button2", "nvtien/feeds/check"};
 
     final String clientId = "123456789";
     final String username = "nvtien";
